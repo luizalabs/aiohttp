@@ -90,7 +90,7 @@ def test_add_header(transport):
     msg = protocol.Response(transport, 200)
     assert [] == list(msg.headers)
 
-    msg.add_header('content-type', 'plain/html')
+    msg.add_header('Content-Type', 'plain/html')
     assert [('Content-Type', 'plain/html')] == list(msg.headers.items())
 
 
@@ -98,7 +98,7 @@ def test_add_header_with_spaces(transport):
     msg = protocol.Response(transport, 200)
     assert [] == list(msg.headers)
 
-    msg.add_header('content-type', '  plain/html  ')
+    msg.add_header('Content-Type', '  plain/html  ')
     assert [('Content-Type', 'plain/html')] == list(msg.headers.items())
 
 
@@ -125,8 +125,16 @@ def test_add_headers(transport):
     msg = protocol.Response(transport, 200)
     assert [] == list(msg.headers)
 
-    msg.add_headers(('content-type', 'plain/html'))
+    msg.add_headers(('Content-Type', 'plain/html'))
     assert [('Content-Type', 'plain/html')] == list(msg.headers.items())
+
+
+def test_add_headers_respect_name_case(transport):
+    msg = protocol.Response(transport, 200)
+    assert [] == list(msg.headers)
+
+    msg.add_headers(('x-api-headerID', '123'))
+    assert [('x-api-headerID', '123')] == list(msg.headers.items())
 
 
 def test_add_headers_length(transport):
@@ -151,7 +159,7 @@ def test_add_headers_upgrade_websocket(transport):
     msg.add_headers(('upgrade', 'test'))
     assert [] == list(msg.headers)
 
-    msg.add_headers(('upgrade', 'websocket'))
+    msg.add_headers(('Upgrade', 'websocket'))
     assert [('Upgrade', 'websocket')] == list(msg.headers.items())
 
 
@@ -249,7 +257,7 @@ def test_send_headers(transport):
     write = transport.write = mock.Mock()
 
     msg = protocol.Response(transport, 200)
-    msg.add_headers(('content-type', 'plain/html'))
+    msg.add_headers(('Content-Type', 'plain/html'))
     assert not msg.is_headers_sent()
 
     msg.send_headers()
@@ -268,7 +276,7 @@ def test_send_headers_non_ascii(transport):
     write = transport.write = mock.Mock()
 
     msg = protocol.Response(transport, 200)
-    msg.add_headers(('x-header', 'текст'))
+    msg.add_headers(('X-Header', 'текст'))
     assert not msg.is_headers_sent()
 
     msg.send_headers()

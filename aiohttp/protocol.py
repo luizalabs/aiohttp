@@ -610,9 +610,7 @@ class HttpMessage(ABC):
             'Header {!r} should have string value, got {!r}'.format(
                 name, value)
 
-        name = istr(name)
         value = value.strip()
-
         if name == hdrs.CONTENT_LENGTH:
             self.length = int(value)
 
